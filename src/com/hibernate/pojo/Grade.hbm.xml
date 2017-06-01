@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.hibernate.pojo.Grade" table="`grade`" lazy="true">
+		<id name="id" type="java.lang.Integer">
+			<column name="id" />
+			<generator class="increment" />
+		</id>
+		<property name="gradeId" type="java.lang.Integer">
+			<column name="gradeId" />
+		</property>
+		<property name="gradeName" type="java.lang.String">
+			<column name="gradeName" />
+		</property>
+		<!-- 单向一对多 年级对学生 -->
+		<set name="students" cascade="delete" inverse="true">
+			<key column="gradeId" property-ref="gradeId"/> 
+			<!-- 本应学生表外键 ,若无使用 property-ref 关联 -->
+			<one-to-many class="com.hibernate.pojo.Student"/>
+		</set>
+	</class>
+</hibernate-mapping>

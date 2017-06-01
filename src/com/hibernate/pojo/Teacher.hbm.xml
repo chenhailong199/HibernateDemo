@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.hibernate.pojo.Teacher" table="Teacher" lazy="true">
+		<id name="tid" type="java.lang.Integer">
+			<column name="id" />
+			<generator class="increment" /> 
+		</id>
+		<property name="tname" type="java.lang.String">
+			<column name="name"/>
+		</property>
+		<!-- 两边外键保证对立关系,两边的table保证一致 -->
+       <set name="students" table="student_teacher">
+           <key column="t_id"/>
+           <many-to-many class="com.hibernate.pojo.Student" column="s_id"/>
+       </set>
+	</class>
+	
+</hibernate-mapping>

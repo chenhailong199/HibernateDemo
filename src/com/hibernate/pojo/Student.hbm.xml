@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.hibernate.pojo.Student" table="`Student`" lazy="true">
+		<!-- 指定使用二级缓存 -->
+		<cache usage="read-write"/>
+		
+		<id name="stuId" type="java.lang.Integer">
+			<column name="`id`" length="11"/>
+			<generator class="increment" /> <!-- 定义主键生成方式 -->
+		</id>
+			<!-- 
+				1,identity：用于MySQL数据库。特点：递增
+				注：对于MySql数据库使用递增序列时需要在建表时对主键指定为auto_increment属性。
+				2,sequence：用于Oracle数据库
+				3、native：跨数据库时使用，由底层方言产生。 
+				Default.sequence为hibernate_sequence
+				注：使用native时Hibernate默认会去查找Oracle中的hibernate_sequence序列。 
+				如果Oracle中没有该序列，连Oracle数据库时会报错。
+				4、hilo：通过高低位合成id，先建表hi_value，再建列next_value。必须要有初始值。
+				5、sequencehilo：同过高低位合成id，建一个sequence序列，不用建表。
+				6、assigned：用户自定义id;
+				7、foreign：用于一对一关系共享主健时，两id值一样。
+			 -->
+		<!-- name值和setter,getter方法名相匹配 -->
+		<property name="stuName" type="java.lang.String">
+			<column name="`name`" length="20" not-null="true"/>
+			<!-- not-null="true" 即执行增删改操作字段值不能为空  -->
+		</property>
+		<property name="stuCity" type="java.lang.String">
+			<column name="city" length="40"/>
+		</property>
+		<property name="stuAge" type="java.lang.Integer">
+			<column name="age" />
+		</property>
+		<property name="gradeId" type="java.lang.Integer" >
+		 	<column name="gradeId" />
+		</property>
+		
+		<!-- 因为 gradeId 不是 student表的外键,所以使用property-ref进行关联
+		-->
+		<many-to-one name="grade" class="com.hibernate.pojo.Grade" property-ref="gradeId" insert="false" update="false">
+			<!-- 指明和grade属性对应的数据库表中的字段 -->
+			<column name="gradeId" />
+		</many-to-one>
+		
+		 <!-- 多对多关联映射，需要第三张表来配置他们双方外键的关系 -->
+         <set name="teachers" table="student_teacher">
+            <!-- 多个学生关联一个老师的外键 -->
+            <key column="s_id"/> <!-- 如果 student_teacher表插入数据不对,可以改为t_id,下方
+            							改为 s_id-->
+            <!-- 配置多对多 -->
+            <many-to-many class="com.hibernate.pojo.Teacher" column="t_id"/>
+         </set>
+		
+		
+		<!-- 定制SQL -->
+		<sql-insert>
+			insert into student (name,city,age,gradeId,id) values(?,?,?,?,?)
+		</sql-insert>
+	</class>
+	<!-- 命名HQL查询 -->
+	<query name="stuName">
+		<![CDATA[
+			from Student s where s.stuName = :stuName
+		]]>
+	</query>
+	
+	<!-- 命名SQL查询 -->
+	<sql-query name="getStudent">
+		<![CDATA[
+			select {s.*} from student s where s.name = ?
+		]]>
+		<return alias="s" class="com.hibernate.pojo.Student" />
+	</sql-query>
+	
+	
+	
+</hibernate-mapping>    
+

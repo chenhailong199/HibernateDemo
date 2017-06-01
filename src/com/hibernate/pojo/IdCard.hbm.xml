@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.hibernate.pojo.IdCard" table="t_idcard" lazy="true">
+		<id name="id" type="java.lang.Integer">
+			<column name="c_id" length="11"/>
+			<generator class="increment" /><!-- 定义主键生成方式 -->
+		</id>
+		<property name="no" type="java.lang.String">
+			<column name="c_no"/>
+		</property>
+		 <!-- 添加一对一关联关系 -->
+          <one-to-one name="user" class="com.hibernate.pojo.User"/>
+	</class>	
+	
+</hibernate-mapping>

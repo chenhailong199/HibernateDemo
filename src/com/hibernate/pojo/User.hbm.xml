@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.hibernate.pojo.User" table="t_user" lazy="true">
+		<id name="id" type="java.lang.Integer">
+			<column name="u_id" length="11"/>
+			<generator class="foreign">
+				<param name="property">idCard</param>
+			</generator>	
+				 <!-- 定义主键生成方式 -->
+		</id>
+		<property name="username" type="java.lang.String">
+			<column name="u_username"/>
+		</property>
+		<property name="password" type="java.lang.String">
+			<column name="u_password"/>
+		</property>
+		
+		  <!-- 配置一对一的关联关系,主键关联 ,name代表关联引用的属性，class表示该属性的全限定名,
+                               添加主键约束constrained="true",将主键生成策略改为foreign-->
+          <one-to-one name="idCard" class="com.hibernate.pojo.IdCard" constrained="true"/>
+	</class>	
+	
+</hibernate-mapping>
